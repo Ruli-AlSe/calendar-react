@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { LoginPage } from '../Auth';
-import { CalendarPage } from '../Calendar';
+import { LoginPage } from '../auth';
+import { CalendarPage } from '../calendar';
 
 export const AppRouter = () => {
   const authStatus: string = 'authenticated';
