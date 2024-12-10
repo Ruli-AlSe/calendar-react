@@ -8,6 +8,7 @@ import { useCalendarStore, useUiStore } from '../../hooks';
 
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ICalendarEvent } from '../../interfaces';
 
 registerLocale('es', es);
 
@@ -27,7 +28,7 @@ Modal.setAppElement('#root');
 export const CalendarModal = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { isDateModalOpen, closeDateModal } = useUiStore();
-  const { activeEvent } = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const [formValues, setFormValues] = useState({
     title: '',
@@ -62,7 +63,7 @@ export const CalendarModal = () => {
     });
   };
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormSubmitted(true);
     const difference = differenceInSeconds(formValues.end, formValues.start);
@@ -72,6 +73,10 @@ export const CalendarModal = () => {
     }
 
     if (formValues.title.length <= 0) return;
+
+    await startSavingEvent(formValues as ICalendarEvent);
+    closeDateModal();
+    setFormSubmitted(false);
   };
 
   return (
