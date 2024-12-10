@@ -5,12 +5,12 @@ export interface IEventProps extends EventProps {
 }
 
 export interface ICalendarEvent {
-  _id: string;
+  _id?: string;
   title: string;
   notes: string;
   start: Date;
   end: Date;
-  bgColor: string;
+  bgColor?: string;
   user: {
     _id: string;
     name: string;
