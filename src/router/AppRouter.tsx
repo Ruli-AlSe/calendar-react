@@ -1,9 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from '../auth';
 import { CalendarPage } from '../calendar';
+import { getEnvVariables } from '../helpers';
 
 export const AppRouter = () => {
   const authStatus: string = 'authenticated';
+  console.log(getEnvVariables());
 
   return (
     <Routes>
