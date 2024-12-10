@@ -3,13 +3,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface AuthState {
   status: 'checking' | 'authenticated' | 'not-authenticated';
-  user: object;
+  user: { name: string; uid: string } | undefined;
   errorMessage?: string;
 }
 
 const initialState: AuthState = {
   status: 'checking',
-  user: {},
+  user: undefined,
   errorMessage: undefined,
 };
 
@@ -19,7 +19,7 @@ export const authSlice = createSlice({
   reducers: {
     onCheckingAuth: (state) => {
       state.status = 'checking';
-      state.user = {};
+      state.user = undefined;
       state.errorMessage = undefined;
     },
     onLogin: (state, action: PayloadAction<AuthState['user']>) => {
@@ -27,7 +27,15 @@ export const authSlice = createSlice({
       state.user = action.payload;
       state.errorMessage = undefined;
     },
+    onLogout: (state, action: PayloadAction<string>) => {
+      state.status = 'not-authenticated';
+      state.user = undefined;
+      state.errorMessage = action.payload;
+    },
+    clearErrorMessage: (state) => {
+      state.errorMessage = undefined;
+    },
   },
 });
 
-export const { onCheckingAuth, onLogin } = authSlice.actions;
+export const { onCheckingAuth, onLogin, onLogout, clearErrorMessage } = authSlice.actions;
