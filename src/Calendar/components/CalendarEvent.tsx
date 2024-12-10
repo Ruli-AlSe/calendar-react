@@ -1,8 +1,4 @@
-import { EventProps } from 'react-big-calendar';
-
-interface IEventProps extends EventProps {
-  event: EventProps['event'] & { user: { _id: string; name: string } };
-}
+import { IEventProps } from '../../interfaces';
 
 export const CalendarEvent = ({ event }: IEventProps) => {
   const { title, user } = event;
