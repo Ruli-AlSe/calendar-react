@@ -1,28 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ICalendarEvent } from '../../interfaces';
-import { addHours } from 'date-fns';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface CalendarState {
+  isLoadingEvents: boolean;
   events: ICalendarEvent[];
   activeEvent: ICalendarEvent | null;
 }
 
 const initialState: CalendarState = {
-  events: [
-    {
-      _id: new Date().getTime().toString(),
-      title: "Boss' birthdate",
-      notes: 'Buy a cake and a gift',
-      start: new Date(),
-      end: addHours(new Date(), 2),
-      bgColor: '#fafafa',
-      user: {
-        _id: '123',
-        name: 'Raul Almanza',
-      },
-    },
-  ],
+  isLoadingEvents: true,
+  events: [],
   activeEvent: null,
 };
 
@@ -39,7 +27,7 @@ export const calendarSlice = createSlice({
     },
     onUpdateEvent: (state, action: PayloadAction<ICalendarEvent>) => {
       state.events = state.events.map((event) => {
-        if (event._id === action.payload._id) {
+        if (event.id === action.payload.id) {
           return action.payload;
         }
 
@@ -48,12 +36,33 @@ export const calendarSlice = createSlice({
     },
     onDeleteEvent: (state) => {
       if (state.activeEvent) {
-        state.events = state.events.filter((event) => event._id !== state.activeEvent?._id);
+        state.events = state.events.filter((event) => event.id !== state.activeEvent?.id);
         state.activeEvent = null;
       }
+    },
+    onLoadEvents: (state, action: PayloadAction<ICalendarEvent[]>) => {
+      state.isLoadingEvents = false;
+      action.payload.forEach((event) => {
+        const exists = state.events.some((dbEvent) => dbEvent.id === event.id);
+        if (!exists) {
+          state.events.push(event);
+        }
+      });
+      state.activeEvent = null;
+    },
+    onLogoutCalendar: (state) => {
+      state.isLoadingEvents = true;
+      state.events = [];
+      state.activeEvent = null;
     },
   },
 });
 
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } =
-  calendarSlice.actions;
+export const {
+  onSetActiveEvent,
+  onAddNewEvent,
+  onUpdateEvent,
+  onDeleteEvent,
+  onLoadEvents,
+  onLogoutCalendar,
+} = calendarSlice.actions;
