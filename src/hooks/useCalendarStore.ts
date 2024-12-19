@@ -10,7 +10,8 @@ import {
 } from '../store';
 import { ICalendarEvent } from '../interfaces';
 import calendarApi from '../api/calendarApi';
-import { convertEventsToDateEvents } from '../helpers';
+import { convertEventsToDateEvents, isBackendResponseError } from '../helpers';
+import Swal from 'sweetalert2';
 
 export const useCalendarStore = () => {
   const { events, activeEvent } = useSelector((state: RootState) => state.calendar);
@@ -22,14 +23,15 @@ export const useCalendarStore = () => {
   };
 
   const startSavingEvent = async (calendarEvent: ICalendarEvent) => {
-    // TODO: send event to backend
+    try {
+      if (calendarEvent.id) {
+        // updating
+        await calendarApi.put(`/events/${calendarEvent.id}`, calendarEvent);
+        dispatch(onUpdateEvent({ ...calendarEvent, user: { id: user!.uid, name: user!.name } }));
 
-    // If everything goes well
+        return;
+      }
 
-    if (calendarEvent.id) {
-      // updating
-      dispatch(onUpdateEvent({ ...calendarEvent }));
-    } else {
       // creating
       const { data } = await calendarApi.post('/events', calendarEvent);
 
@@ -40,6 +42,13 @@ export const useCalendarStore = () => {
           user: { id: user!.uid, name: user!.name },
         })
       );
+    } catch (error: unknown) {
+      console.error(JSON.stringify(error));
+      if (isBackendResponseError(error)) {
+        Swal.fire('Error saving event', error.response!.data.message, 'error');
+      } else {
+        Swal.fire('An unknown error occurred', '', 'error');
+      }
     }
   };
 
