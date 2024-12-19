@@ -25,6 +25,6 @@ export interface BackendCalendarEvent {
   title: string;
   user: {
     name: string;
-    id: string;
+    _id: string;
   };
 }
