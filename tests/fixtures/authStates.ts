@@ -1,10 +1,12 @@
-export const initialState = {
+import { AuthState } from '../../src/store';
+
+export const initialState: AuthState = {
   status: 'checking',
   user: undefined,
   errorMessage: undefined,
 };
 
-export const authenticatedState = {
+export const authenticatedState: AuthState = {
   status: 'authenticated',
   user: {
     uid: 'abc',
@@ -13,7 +15,7 @@ export const authenticatedState = {
   errorMessage: undefined,
 };
 
-export const notAuthenticatedState = {
+export const notAuthenticatedState: AuthState = {
   status: 'not-authenticated',
   user: undefined,
   errorMessage: undefined,
