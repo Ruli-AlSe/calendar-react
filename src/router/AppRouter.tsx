@@ -4,6 +4,8 @@ import { CalendarPage } from '../calendar';
 import { useAuthStore } from '../hooks';
 import { useEffect } from 'react';
 
+import './styles.css';
+
 export const AppRouter = () => {
   const { status, checkAuthToken } = useAuthStore();
 

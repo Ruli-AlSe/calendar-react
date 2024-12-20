@@ -9,6 +9,7 @@ import { useCalendarStore, useUiStore } from '../../hooks';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ICalendarEvent } from '../../interfaces';
+import { getEnvVariables } from '../../helpers';
 
 registerLocale('es', es);
 
@@ -23,7 +24,9 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement('#root');
+if (getEnvVariables().VITE_MODE !== 'test') {
+  Modal.setAppElement('#root');
+}
 
 export const CalendarModal = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
